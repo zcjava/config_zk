@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+        
+        <bean id="configService" class="org.springframework.jmx.access.MBeanProxyFactoryBean">
+			<property name="connectOnStartup" value="true" />
+			<property name="refreshOnConnectFailure" value="true" />
+			<property name="objectName"
+				value="public:app=wasu-upm-config,class=ConfigService,name=configService" />
+			<property name="proxyInterface">
+				<value>com.wasu.upm.config.service.ConfigService</value>
+			</property>
+			<property name="serviceUrl">
+				<value>service:jmx:jmxmp://127.0.0.1:7212</value>
+			</property>
+		</bean>
+</beans>

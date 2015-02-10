@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+      http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+      http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+      http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+      http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+      http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd">
+
+	<context:annotation-config />
+	<context:component-scan base-package="com.wasu.upm.config" />
+
+	<import resource="classpath:stc/skymobi/ebus/spring/Configurable.xml" />
+	<import resource="classpath:com/skymobi/stc/redis/poolRedisConnector.xml" />
+	<import resource="classpath:com/wasu/upm/handler/busiHandlerConfig.xml" />
+	<import resource="classpath:com/wasu/upm/db/dataSource.xml" />
+	<import
+		resource="classpath:itc/wasu/template/services/httpSendbackHelperJsonImpl.xml" />
+
+	<bean name="bussinessScan" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.wasu.upm.config.db.mapper.business" />
+		<property name="markerInterface" value="com.wasu.upm.commons.mapper.IMybatisMapper" />
+		<property name="sqlSessionFactoryBeanName" value="businessSqlSessionFactory" />
+	</bean>
+
+	<bean factory-bean="rootRegistry" factory-method="setImplToProxy">
+		<constructor-arg value="config.service.ConfigService" />
+		<constructor-arg value="com.wasu.upm.config.service.ConfigService" />
+		<constructor-arg ref="configService" />
+	</bean>
+	
+	
+	<bean id="serviceExporter" class="stc.skymobi.jmx.PrefixableMBeanExporter"
+		lazy-init="false">
+		<constructor-arg ref="appMBeanPrefix" />
+		<property name="beans">
+			<map>
+				<entry
+					key="prefix:class=ConfigService,name=configService"
+					value-ref="configService" />
+			</map>
+		</property>
+	</bean>
+
+</beans>
